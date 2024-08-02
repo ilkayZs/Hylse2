@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface AnimatedCodeEditorProps {
@@ -14,12 +14,12 @@ const AnimatedCodeEditor: React.FC<AnimatedCodeEditorProps> = ({ texts, interval
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const typingRef = useRef<NodeJS.Timeout | null>(null);
 
-  const typeWriter = (text: string, index: number = 0) => {
+  const typeWriter = useCallback((text: string, index: number = 0) => {
     if (index < text.length) {
       setDisplayText(text.slice(0, index + 1));
       typingRef.current = setTimeout(() => typeWriter(text, index + 1), 20);
     }
-  };
+  }, []);
 
   useEffect(() => {
     const startNewText = () => {
@@ -38,7 +38,7 @@ const AnimatedCodeEditor: React.FC<AnimatedCodeEditorProps> = ({ texts, interval
       if (intervalRef.current) clearInterval(intervalRef.current);
       if (typingRef.current) clearTimeout(typingRef.current);
     };
-  }, [currentIndex, texts, interval]);
+  }, [currentIndex, texts, interval, typeWriter]);
 
   return (
     <div className="h-full w-full flex items-center justify-center rounded-lg overflow-hidden">

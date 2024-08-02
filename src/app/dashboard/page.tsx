@@ -66,7 +66,7 @@ const Dashboard: React.FC = () => {
           </div>
           <div className="p-6 space-y-4">
             <h3 className="font-bold text-2xl md:text-3xl text-neutral-800 dark:text-neutral-200">
-              We are still developing our application and it is currently in Beta test. Please don't forget to give feedback.
+              We are still developing our application and it is currently in Beta test. Please don&apos;t forget to give feedback.
             </h3>
             <h4 className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400">
               Remember, the better prompt you enter, the better the results. It may also give errors because it is in the testing phase. Please let us know the errors.
@@ -118,7 +118,7 @@ const Dashboard: React.FC = () => {
                     </Link>
                   </HoverCardTrigger>
                   <HoverCardContent>
-                    Tailwind.css – It's fast, flexible, and reliable — with zero-runtime.
+                    Tailwind.css – It&apos;s fast, flexible, and reliable — with zero-runtime.
                   </HoverCardContent>
                 </HoverCard>.
               </li>
