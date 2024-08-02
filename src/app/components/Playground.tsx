@@ -121,7 +121,7 @@ const Playground: React.FC<PlaygroundProps> = ({ code }) => {
             value={internalCode}
             theme="vs-dark"
             options={{
-              readOnly: false,
+              readOnly: true,
               minimap: { enabled: false },
               lineNumbers: 'on',
               scrollBeyondLastLine: false,
