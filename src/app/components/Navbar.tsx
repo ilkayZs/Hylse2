@@ -22,7 +22,7 @@ const Navbar: React.FC = () => {
           </div>
           <div className="hidden md:flex space-x-4 mr-20 dark:text-neutral-50 text-neutral-950 ">
             <Link href="/" className="rounded-md m-4 py-2 px-2 font-semibold dark:hover:bg-neutral-50 dark:hover:text-neutral-950 hover:bg-gray-900 hover:text-white">Home</Link>
-            <Link href="/dashboard" className="rounded-md m-4 py-2 px-2 font-semibold dark:hover:bg-neutral-50 dark:hover:text-neutral-950 hover:bg-gray-900 hover:text-white">Dashboard</Link>
+            <Link href="/sign-in" className="rounded-md m-4 py-2 px-2 font-semibold dark:hover:bg-neutral-50 dark:hover:text-neutral-950 hover:bg-gray-900 hover:text-white">Dashboard</Link>
            
           </div>
           <div className="md:hidden">
