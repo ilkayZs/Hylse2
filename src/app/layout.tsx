@@ -40,8 +40,8 @@ export default function RootLayout({
   return (
     <ClerkProvider>
     <html lang="en">
-    <GoogleTagManager gtmId="G-D0FMHPQMSE" />
       <body className={inter.className}>
+      <GoogleTagManager gtmId="G-D0FMHPQMSE" />
       <ThemeProvider
             attribute="class"
             defaultTheme="dark"
