@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from '@clerk/nextjs'
 import { ThemeProvider } from "@/components/ui/theme-provider"
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,6 +39,23 @@ export default function RootLayout({
   return (
     <ClerkProvider>
     <html lang="en">
+      <head>
+      <Script 
+      async src="https://www.googletagmanager.com/gtag/js?id=G-D0FMHPQMSE">
+
+      </Script>
+<Script id="google-analytics">
+  {
+    `
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-D0FMHPQMSE'); 
+    `
+  }
+</Script>
+      </head>
       <body className={inter.className}>
       <ThemeProvider
             attribute="class"
