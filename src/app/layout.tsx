@@ -4,7 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from '@clerk/nextjs'
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import Script from "next/script";
-import { GoogleTagManager } from '@next/third-parties/google'
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,7 +41,7 @@ export default function RootLayout({
     <ClerkProvider>
     <html lang="en">
       <body className={inter.className}>
-      <GoogleTagManager gtmId="G-D0FMHPQMSE" />
+      <GoogleAnalytics gaId="G-D0FMHPQMSE" />
       <ThemeProvider
             attribute="class"
             defaultTheme="dark"
