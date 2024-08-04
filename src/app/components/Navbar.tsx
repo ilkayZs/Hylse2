@@ -15,7 +15,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <nav id='nav1' className="bg-gray-50/90 dark:bg-neutral-950/10 backdrop-blur text-black border-b p-4 md:p-0 border-black/20 sticky top-0 z-10">
+      <nav id='nav1' className="bg-gray-50/90 dark:bg-neutral-950/10 backdrop-blur text-black border-b p-4 md:p-0 border-black/20 sticky top-0 z-20">
         <div className="container mx-auto flex justify-between items-center">
           <div className="text-2xl font-bold">
             <Link href="/" className='animate-text bg-gradient-to-r from-black via-gray-300 to-gray-900 bg-clip-text text-transparent text-4xl font-black'>HYLSE</Link>

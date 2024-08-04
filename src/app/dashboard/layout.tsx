@@ -5,13 +5,13 @@ export default function DashboardLayout({
   }: {
     children: React.ReactNode
   }) {
-    return (
-      <section className="bg-neutral-800">
+    return ( 
+      <div className="bg-neutral-800 ">
          
         <Sidebar/>
         {children}
     
-      </section>
+      </div>
     
     )
   }
