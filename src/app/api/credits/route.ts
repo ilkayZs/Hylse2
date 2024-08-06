@@ -1,14 +1,14 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
 import { connect } from '@/db';
 import User from '@/modals/user.modals';
 import Credit from '@/modals/credit';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: NextRequest) {
   const { userId } = getAuth(req);
 
   if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const user = await User.findOne({ clerkId: userId }).populate('credits');
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     if (!user.credits) {
@@ -25,24 +25,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const newCredit = await Credit.create({
         userId: user._id,
         amount: 20,
-        lastUpdated: new Date()
+        lastUpdated: new Date(),
       });
 
       user.credits = newCredit._id;
       await user.save();
 
-      return res.status(200).json({ 
-        amount: newCredit.amount, 
-        lastUpdated: newCredit.lastUpdated 
+      return NextResponse.json({
+        amount: newCredit.amount,
+        lastUpdated: newCredit.lastUpdated,
       });
     }
 
-    res.status(200).json({ 
-      amount: user.credits.amount, 
-      lastUpdated: user.credits.lastUpdated 
+    return NextResponse.json({
+      amount: user.credits.amount,
+      lastUpdated: user.credits.lastUpdated,
     });
   } catch (error) {
     console.error('Database error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
