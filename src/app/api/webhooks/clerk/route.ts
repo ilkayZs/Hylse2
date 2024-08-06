@@ -3,10 +3,11 @@ import { headers } from 'next/headers'
 import { clerkClient, WebhookEvent } from '@clerk/nextjs/server'
 import { createUser } from '@/actions/user.action'
 import { NextResponse } from 'next/server'
+import User from '@/modals/user.modals'
+import Credit from '@/modals/credit'
+import { connect } from "@/db";
 
 export async function POST(req: Request) {
-
-  // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
 
   if (!WEBHOOK_SECRET) {
@@ -50,38 +51,49 @@ export async function POST(req: Request) {
   }
 
   // Do something with the payload
-  // For this guide, you simply log the payload to the console
   const { id } = evt.data;
   const eventType = evt.type;
 
   if(eventType === "user.created"){
-    const {id, email_addresses, image_url, first_name, last_name, username} =
-      evt.data;
+    const {id, email_addresses, image_url, first_name, last_name, username} = evt.data;
 
-      const user = {
-        clerkId: id, 
-        email: email_addresses[0].email_address,
-        username: username!,
-        photo: image_url!,
-        firstName: first_name,
-        lastName: last_name,
+    const userData = {
+      clerkId: id, 
+      email: email_addresses[0].email_address,
+      username: username!,
+      photo: image_url!,
+      firstName: first_name,
+      lastName: last_name,
     }
 
-    console.log(user);
+    await connect();
 
-    const newUser = await createUser(user);
+    const newUser = await User.create(userData);
 
     if(newUser) {
-       await clerkClient.users.updateUserMetadata(id,{
+      // Create credit record for the new user
+      const newCredit = await Credit.create({
+        userId: newUser._id,
+        amount: 20,
+        lastUpdated: new Date()
+      });
+
+      // Update user with credit reference
+      await User.findByIdAndUpdate(newUser._id, { credits: newCredit._id });
+
+      await clerkClient.users.updateUserMetadata(id, {
         publicMetadata: {
-            userId: newUser._id,
+          userId: newUser._id,
         }
-       })
+      })
+
+      console.log(`Added 20 credits for new user ${newUser._id}`);
     }
 
-    return NextResponse.json({message: "New user created", user:newUser}); 
+    return NextResponse.json({message: "New user created and credits added", user: newUser}); 
   }
-  console.log(`Webhook with and ID of ${id} and type of ${eventType}`)
+
+  console.log(`Webhook with an ID of ${id} and type of ${eventType}`)
   console.log('Webhook body:', body)
 
   return new Response('', { status: 200 })

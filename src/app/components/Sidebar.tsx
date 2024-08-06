@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, useAnimationControls, easeInOut, AnimationControls } from "framer-motion";
 import { UserButton, SignInButton, SignedIn, SignedOut } from '@clerk/nextjs';
 import Link from "next/link";
-import { FileClock, FolderClock, LayoutDashboard, BrainCircuit } from 'lucide-react';
+import { FileClock, FolderClock, LayoutDashboard, BrainCircuit, UserCog, BadgeCent } from 'lucide-react';
 
 import { dark } from "@clerk/themes";
 import { ModeToggle } from './Darkmode';
@@ -153,9 +153,17 @@ const Sidebar: React.FC = () => {
           <LayoutDashboard className='stroke-inherit stroke[.75] min-w-8 w-8'/>
           Dashboard
         </Link>
-        <Link href="/history" className="overflow-clip whitespace-nowrap tracking-wide flex p-1 rounded cursor-pointer font-medium stroke-[0.75] dark:hover:stroke-neutral-100 dark:stroke-neutral-400 hover:stroke-neutral-950 stroke-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100 text-neutral-500 hover:text-neutral-950 place-items-center gap-3 dark:hover:bg-neutral-700/30 hover:bg-neutral-500/20 transition-colors duration-100">
+        <Link href="/dashboard/history" className="overflow-clip whitespace-nowrap tracking-wide flex p-1 rounded cursor-pointer font-medium stroke-[0.75] dark:hover:stroke-neutral-100 dark:stroke-neutral-400 hover:stroke-neutral-950 stroke-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100 text-neutral-500 hover:text-neutral-950 place-items-center gap-3 dark:hover:bg-neutral-700/30 hover:bg-neutral-500/20 transition-colors duration-100">
           <FolderClock className='stroke-inherit stroke[.75] min-w-8 w-8'/>
           Chat History
+        </Link>
+        <Link href="/dashboard/profile" className="overflow-clip whitespace-nowrap tracking-wide flex p-1 rounded cursor-pointer font-medium stroke-[0.75] dark:hover:stroke-neutral-100 dark:stroke-neutral-400 hover:stroke-neutral-950 stroke-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100 text-neutral-500 hover:text-neutral-950 place-items-center gap-3 dark:hover:bg-neutral-700/30 hover:bg-neutral-500/20 transition-colors duration-100">
+          <UserCog className='stroke-inherit stroke[.75] min-w-8 w-8'/>
+          Profile
+        </Link>
+        <Link href="/dashboard/credits" className="overflow-clip whitespace-nowrap tracking-wide flex p-1 rounded cursor-pointer font-medium stroke-[0.75] dark:hover:stroke-neutral-100 dark:stroke-neutral-400 hover:stroke-neutral-950 stroke-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100 text-neutral-500 hover:text-neutral-950 place-items-center gap-3 dark:hover:bg-neutral-700/30 hover:bg-neutral-500/20 transition-colors duration-100">
+          <BadgeCent className='stroke-inherit stroke[.75] min-w-8 w-8'/>
+          Credits
         </Link>
       </div>
       <div className='overflow-clip flex flex-col gap-3 min-w-12'>
