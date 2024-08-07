@@ -1,3 +1,4 @@
+// AIChatUI.tsx
 'use client';
 
 import React, { useState, KeyboardEvent, ChangeEvent, useRef, useEffect, useCallback } from 'react';
