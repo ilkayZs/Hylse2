@@ -65,8 +65,8 @@ const Credits: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto p-4 max-w-md h-screen dark:bg-neutral-900 bg-neutral-50">
-      <Card className="w-full">
+    <div className="container mx-auto p-4 w-full h-screen dark:bg-neutral-900 bg-neutral-50">
+      <Card className="w-[600px]">
         <CardHeader>
           <h2 className="text-2xl font-bold text-center">Your Credits</h2>
         </CardHeader>
