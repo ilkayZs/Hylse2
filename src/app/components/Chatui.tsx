@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState, KeyboardEvent, ChangeEvent, useRef, useEffect, useCallback } from 'react';
-import { ArrowUpCircle, X, ShipWheel } from 'lucide-react';
+import { ArrowUpCircle, X, ShipWheel, CreditCard } from 'lucide-react';
 import Playground from '../components/Playground';
+import { useUser } from '@clerk/nextjs';
 
 // Örnek kodları JSON formatında saklıyoruz
 const exampleCodes: { [key: string]: string } = {
-
   button: `
     <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
       Button
@@ -15,11 +15,18 @@ const exampleCodes: { [key: string]: string } = {
   // Diğer örnek kodlar burada eklenebilir
 };
 
+interface UserCredits {
+  amount: number;
+  lastUpdated: string;
+}
+
 const AIChatUI: React.FC = () => {
+  const { user } = useUser();
   const [inputMessage, setInputMessage] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [code, setCode] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+  const [credits, setCredits] = useState<UserCredits | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -42,6 +49,26 @@ const AIChatUI: React.FC = () => {
   useEffect(() => {
     adjustTextareaHeight();
   }, [inputMessage, adjustTextareaHeight]);
+
+  const fetchCredits = useCallback(async () => {
+    if (!user) return;
+
+    try {
+      const response = await fetch('/api/credits');
+      if (!response.ok) {
+        throw new Error('Failed to fetch credits');
+      }
+      const data = await response.json();
+      setCredits(data);
+    } catch (err) {
+      console.error('Error fetching credits:', err);
+      setError('Failed to load credits. Please try again later.');
+    }
+  }, [user]);
+
+  useEffect(() => {
+    fetchCredits();
+  }, [fetchCredits]);
 
   const enhanceUserInput = useCallback((input: string): string => {
     const enhancement = `
@@ -84,15 +111,35 @@ const AIChatUI: React.FC = () => {
     return `${input} | ${enhancement.replace(/\n\s+/g, ' ')}`;
   }, []);
 
+  const decreaseCredits = useCallback(async () => {
+    if (!user) return;
+
+    try {
+      const response = await fetch('/api/credits', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'decrease' }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update credits');
+      }
+
+      await fetchCredits(); // Kredileri yeniden yükle
+    } catch (err) {
+      console.error('Error updating credits:', err);
+      setError('Failed to update credits. Please try again later.');
+    }
+  }, [user, fetchCredits]);
+
   const handleSendMessage = useCallback(async (): Promise<void> => {
-    if (inputMessage.trim() === '') return;
+    if (inputMessage.trim() === '' || !credits || credits.amount <= 0) return;
 
     const enhancedMessage = enhanceUserInput(inputMessage);
     setInputMessage('');
     setIsLoading(true);
     setError(null);
 
-    // Yeni bir AbortController oluştur
     abortControllerRef.current = new AbortController();
 
     try {
@@ -127,6 +174,9 @@ const AIChatUI: React.FC = () => {
       `;
 
       setCode(wrappedCode);
+
+      // Decrease credits after successful response
+      await decreaseCredits();
     } catch (error: unknown) {
       if (error instanceof Error) {
         if (error.name === 'AbortError') {
@@ -143,7 +193,7 @@ const AIChatUI: React.FC = () => {
       setIsLoading(false);
       abortControllerRef.current = null;
     }
-  }, [inputMessage, enhanceUserInput]);
+  }, [inputMessage, enhanceUserInput, credits, decreaseCredits]);
 
   const handleCancelRequest = useCallback(() => {
     if (abortControllerRef.current) {
@@ -165,6 +215,12 @@ const AIChatUI: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen w-full dark:bg-neutral-900 bg-neutral-200 relative">
+      <div className="flex justify-end p-4">
+        <div className="flex items-center space-x-2">
+          <CreditCard className="h-5 w-5 text-blue-500" />
+          <span className="text-lg font-bold">{credits?.amount ?? 0}</span>
+        </div>
+      </div>
       <div className="flex-1 overflow-y-auto w-full p-2 sm:p-2 pt-2 sm:pt-2 custom-scrollbar">
         {code && <Playground code={code} />}
         <div ref={messagesEndRef} />
@@ -178,16 +234,16 @@ const AIChatUI: React.FC = () => {
             onKeyDown={handleKeyPress}
             placeholder="Send a message to Hylse..."
             className="w-full custom-scrollbar overflow-auto text-balance leading-relaxed pr-7 pl-4 p-2 min-h-[40px] sm:min-h-[49px] max-h-[200px] resize-none text-sm sm:text-base rounded-2xl border border-neutral-500 focus:outline-none focus:ring-1 dark:focus:ring-neutral-600 focus:ring-neutral-900 transition-all duration-200 ease-in-out"
-            disabled={isLoading}
+            disabled={isLoading || !credits || credits.amount <= 0}
             rows={1}
           />
           
           <button
             onClick={handleSendMessage}
             className={`absolute sm:right-3 sm:bottom-4 right-2 bottom-3 focus:outline-none transition-colors duration-200 ${
-              isLoading ? "text-gray-400" : "text-neutral-800 hover:text-gray-700 dark:text-neutral-300 dark:hover:text-neutral-400"
+              isLoading || !credits || credits.amount <= 0 ? "text-gray-400" : "text-neutral-800 hover:text-gray-700 dark:text-neutral-300 dark:hover:text-neutral-400"
             }`}
-            disabled={isLoading}
+            disabled={isLoading || !credits || credits.amount <= 0}
           >
             <ArrowUpCircle strokeWidth={1.50} className="h-6 w-6 sm:h-8 sm:w-8" />
           </button>
