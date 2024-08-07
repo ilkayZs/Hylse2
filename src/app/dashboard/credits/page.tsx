@@ -4,6 +4,7 @@ import { useUser } from '@clerk/nextjs';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, CreditCard, Plus, Minus } from 'lucide-react';
+import Link from 'next/link';
 
 interface UserCredits {
   amount: number;
@@ -76,15 +77,22 @@ const Credits: React.FC = () => {
             <span className="text-4xl font-bold">{credits?.amount ?? 0}</span>
           </div>
           <p className="text-center text-gray-600 mb-4">
-            Use your credits to access premium features and content.
+          Our application is in beta. Credit usage is limited for now. You can support us via 
+          <Link 
+            href='https://www.buymeacoffee.com/hylse'
+            target="_blank"
+            rel="noreferrer"
+             className="text-green-400 text-sm">
+            You can support us on buymeacoffee.
+            </Link>
+           if you want.
           </p>
-          <div className="grid grid-cols-2 gap-4">
+          
+          <div className="grid grid-cols-1 gap-4">
             <Button onClick={handleBuyCredits} className="w-full">
-              <Plus className="mr-2 h-4 w-4" /> Buy Credits
+              <Plus className="mr-2 h-4 w-4" /> Credit purchase will be added in the future.
             </Button>
-            <Button onClick={handleUseCredits} variant="outline" className="w-full">
-              <Minus className="mr-2 h-4 w-4" /> Use Credits
-            </Button>
+           
           </div>
         </CardContent>
         <CardFooter className="text-center text-sm text-gray-500">
