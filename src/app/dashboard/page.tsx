@@ -68,6 +68,15 @@ const Dashboard: React.FC = () => {
             <h3 className="font-bold text-2xl md:text-3xl text-neutral-800 dark:text-neutral-200">
               We are still developing our application and it is currently in Beta test. Please don&apos;t forget to give feedback.
             </h3>
+            <div className='h-12 rounded'>
+            <Link 
+            href='https://www.buymeacoffee.com/hylse'
+            target="_blank"
+            rel="noreferrer"
+             className="font-bold text-2xl md:text-3xl text-green-500 my-2">
+            You can support us on buymeacoffee.
+            </Link>
+            </div>
             <h4 className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400">
               Remember, the better prompt you enter, the better the results. It may also give errors because it is in the testing phase. Please let us know the errors.
             </h4>
