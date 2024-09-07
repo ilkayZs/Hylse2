@@ -78,14 +78,6 @@ const Credits: React.FC = () => {
           </div>
           <p className="text-center text-gray-600 mb-4">
           Our application is in beta. Credit usage is limited for now. You can support us via 
-          <Link 
-            href='https://www.buymeacoffee.com/hylse'
-            target="_blank"
-            rel="noreferrer"
-             className="text-green-400 text-sm">
-            You can support us on buymeacoffee.
-            </Link>
-           if you want.
           </p>
           
           <div className="grid grid-cols-1 gap-4">
